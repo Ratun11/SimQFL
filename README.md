@@ -38,14 +38,23 @@ Running the Application
 Folder Structure
 ----------------------------------------
 
+
 SimQFL/
+
 │
+
 ├── app.py                        # Main Flask application
+
 ├── quantum_circuit_simulator.py # Quantum logic and utilities
+
 ├── requirements.txt             # Python dependencies
+
 ├── templates/                   # HTML templates
+
 ├── static/                      # JavaScript, CSS, assets
+
 ├── MNIST/, CIFAR10/, etc.       # Dataset folders (used by torchvision)
+
 └── venv/                        # Virtual environment (optional)
 
 ----------------------------------------
