@@ -23,29 +23,6 @@ Running the Application
 4. Visit http://127.0.0.1:5000 in your browser to use the simulator (if it doesn't open automically).
 
 ----------------------------------------
-Folder Structure
-----------------------------------------
-
-
-SimQFL/
-
-│
-
-├── app.py                        # Main Flask application
-
-├── quantum_circuit_simulator.py # Quantum logic and utilities
-
-├── requirements.txt             # Python dependencies
-
-├── templates/                   # HTML templates
-
-├── static/                      # JavaScript, CSS, assets
-
-├── MNIST/, CIFAR10/, etc.       # Dataset folders (used by torchvision)
-
-└── venv/                        # Virtual environment (optional)
-
-----------------------------------------
 Key Features
 ----------------------------------------
 
@@ -56,16 +33,6 @@ Key Features
 - Real-time progress streaming with results
 - Download final simulation results as CSV
 
-----------------------------------------
-Deployment on Render
-----------------------------------------
-
-1. Push this project to a GitHub repository.
-2. On https://render.com:
-    - New Web Service → Connect to your GitHub
-    - Set:
-        Build Command: pip install -r requirements.txt
-        Start Command: gunicorn app:app
 
 ----------------------------------------
 License
