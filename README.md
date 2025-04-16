@@ -20,7 +20,7 @@ Running the Application
 
     app.exe
 
-4. Visit http://127.0.0.1:5000 in your browser to use the simulator (if it doesn't open automatically).
+4. Visit http://127.0.0.1 in your browser to use the simulator (if it doesn't open automatically).
 
 ----------------------------------------
 Key Features
