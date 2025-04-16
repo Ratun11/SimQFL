@@ -4,35 +4,23 @@ SimQFL: Quantum Federated Learning Simulator
 SimQFL is a Flask-based web simulator that allows users to explore both classical and quantum federated learning models using datasets like MNIST, FashionMNIST, CIFAR-10, and CIFAR-100. It also supports regression on user-uploaded CSV data with quantum backends.
 
 ----------------------------------------
-Requirements
+Downloads
 ----------------------------------------
 
-- Python 3.7+
-- pip (Python package manager)
-
-Required Libraries:
-
-Run the following command to install required libraries:
-
-    pip install -r requirements.txt
-
-If you don’t have a virtual environment set up, it is recommended to do so:
-
-    python -m venv venv
-    source venv/bin/activate       (Linux/Mac)
-    venv\Scripts\activate          (Windows)
+You can download the files from here:
+https://drive.google.com/drive/folders/1tjTHZ-n1wasdPprprj7oglfZSXT3lRYr?usp=sharing
 
 ----------------------------------------
 Running the Application
 ----------------------------------------
 
-1. Open terminal or command prompt.
-2. Navigate to the project directory.
+1. Open the Google Drive link and download the files
+2. Open the dist folder and the app folder
 3. Run:
 
-    python app.py
+    app.exe
 
-4. Visit http://127.0.0.1:5000 in your browser to use the simulator.
+4. Visit http://127.0.0.1:5000 in your browser to use the simulator (if it doesn't open automically).
 
 ----------------------------------------
 Folder Structure
