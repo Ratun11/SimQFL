@@ -15,12 +15,12 @@ Running the Application
 ----------------------------------------
 
 1. Open the Google Drive link and download the files
-2. Open the dist folder and the app folder
+2. Open the "dist" folder and the "app" folder
 3. Run:
 
     app.exe
 
-4. Visit http://127.0.0.1:5000 in your browser to use the simulator (if it doesn't open automically).
+4. Visit http://127.0.0.1:5000 in your browser to use the simulator (if it doesn't open automatically).
 
 ----------------------------------------
 Key Features
