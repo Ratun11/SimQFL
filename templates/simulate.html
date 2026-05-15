@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configure FL Simulation</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <header>
+    <h1>Quantum Federated Learning Simulator</h1>
+    <nav>
+      <ul>
+        <li><a href="/" class="{{ 'active' if request.path == '/' else '' }}">Home</a></li>
+        <li><a href="/about" class="{{ 'active' if request.path == '/about' else '' }}">About</a></li>
+        <li><a href="/contact" class="{{ 'active' if request.path == '/contact' else '' }}">Contact</a></li>
+        <li><a href="/choose" class="{{ 'active' if request.path == '/choose' else '' }}">Configure</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <form id="simulationForm" action="/start_simulation" method="post">
+      <label for="fl_type">Type of FL:</label>
+      <select id="fl_type" name="fl_type">
+        <option value="quantum_federated" selected>Quantum Federated Learning</option>
+        <option value="federated">Federated Learning</option>
+      </select>
+      <br>
+      <label for="dataset">Dataset:</label>
+      <select id="dataset" name="dataset">
+        <option value="mnist">MNIST</option>
+        <option value="fashion_mnist">FashionMNIST</option>
+        <option value="cifar100">CIFAR-100</option>
+        <!-- <option value="cifar100">CIFAR-100</option> --> 
+      </select>
+      <br>
+      <label for="num_clients">Number of Clients:</label>
+      <input type="number" id="num_clients" name="num_clients" min="1" max="100"  value="3">
+      <br>
+      <label for="local_epochs">Number of Local Epochs:</label>
+      <input type="number" id="local_epochs" name="local_epochs" min="1" max="100"  value="1">
+      <br>
+      <label for="global_epochs">Number of Global Epochs:</label>
+      <input type="number" id="global_epochs" name="global_epochs" min="1" max="500"  value="100">
+      <br>
+      <!-- Quantum parameters -->
+      <label for="num_qubits">Number of Qubits (n):</label>
+      <input type="number" id="num_qubits" name="num_qubits" min="1" value="10">
+      <br>
+      <label for="num_layers">Number of Quantum Layers (L):</label>
+      <input type="number" id="num_layers" name="num_layers" min="1" value="1">
+      <br>
+      <!-- Additional Quantum Options -->
+      <label for="quantum_encoding">Quantum Encoding:</label>
+      <select id="quantum_encoding" name="quantum_encoding">
+        <option value="amplitude" selected>Amplitude Encoding</option>
+      </select>
+      <br>
+      <label for="ansatz">Ansatz:</label>
+      <select id="ansatz" name="ansatz">
+        <option value="Paramerised Quantum Circuit" selected>Paramerised Quantum Circuit</option>
+      </select>
+      <br>
+      <label for="measurement">Measurement Observable:</label>
+      <select id="measurement" name="measurement">
+        <option value="probability" selected>Pauli-Z</option>
+      </select>
+      <br>
+      <label for="differential">Differentiation Technique:</label>
+      <select id="differential" name="differential">
+        <option value="parameter_shift" selected>Parameter Shift</option>
+      </select>
+      <br>
+      <label for="loss_function">Loss Function:</label>
+      <select id="loss_function" name="loss_function">
+        <option value="cross_entropy" selected>Cross Entropy Loss</option>
+      </select>
+      <br>
+      <label for="optimizer">Optimizer:</label>
+      <select id="optimizer" name="optimizer">
+        <option value="adam" selected>Adam</option>
+      </select>
+      <br>
+      <!-- New Learning Rate input -->
+      <button type="submit">Start Simulation</button>
+    </form>
+  </main>
+  <footer>
+    <p>© 2025 Quantum Federated Learning Simulator. All rights reserved.</p>
+  </footer>
+</body>
+</html>

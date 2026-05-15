@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Simulation Results - Quantum Federated Learning Simulator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    /* Feel free to adjust the styling as needed */
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1, h2, h3 { color: #333; }
+    ul { list-style-type: disc; margin-left: 20px; }
+    .btn-main { display: inline-block; padding: 10px 20px; background-color: #007BFF; color: white; border: none; border-radius: 4px; text-decoration: none; }
+    .btn-main:hover { background-color: #0056b3; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Custom Simulation Results</h1>
+    <nav>
+      <ul>
+        <li><a href="/" class="{{ 'active' if request.path == '/' else '' }}">Home</a></li>
+        <li><a href="/about" class="{{ 'active' if request.path == '/about' else '' }}">About</a></li>
+        <li><a href="/contact" class="{{ 'active' if request.path == '/contact' else '' }}">Contact</a></li>
+        <li><a href="/simulate" class="{{ 'active' if request.path == '/choose' else '' }}">Configure</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <h2>Custom Simulation Configuration</h2>
+    <p>The following configuration was chosen:</p>
+    <h3>Selected Features:</h3>
+    <ul>
+      {% for feature, selection in result.selected_features.items() %}
+        <li>{{ feature }}: {{ selection }}</li>
+      {% endfor %}
+    </ul>
+    <p><strong>Output Feature:</strong> {{ result.output_feature }}</p>
+    <br>
+    <a href="/choose" class="btn-main">Back to Simulation Setup</a>
+  </main>
+  <footer>
+    <p>© 2025 Quantum Federated Learning Simulator. All rights reserved.</p>
+  </footer>
+</body>
+</html>

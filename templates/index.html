@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quantum Federated Learning Simulator</title>
+  <!-- Link your stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <h1>Quantum Federated Learning Simulator</h1>
+    <nav>
+      <ul>
+        <li><a href="/" class="{{ 'active' if request.path == '/' else '' }}">Home</a></li>
+        <li><a href="/about" class="{% if request.path == '/about' %}active{% endif %}">About</a></li>
+        <li><a href="/contact" class="{{ 'active' if request.path == '/contact' else '' }}">Contact</a></li>
+        <li><a href="/choose" class="{{ 'active' if request.path == '/choose' else '' }}">Configure</a></li>
+      </ul>
+    </nav>
+  </header>
+  
+  <!-- MAIN CONTENT -->
+  <main>
+    <!-- HERO SECTION -->
+    <section id="hero">
+      <div class="hero-content">
+        <h2>Revolutionizing Machine Learning with Quantum Power</h2>
+        <p>
+          Experience the next frontier in federated learning by harnessing the capabilities of quantum computing.
+          Collaborate globally, keep data secure, and push the boundaries of AI and quantum mechanics.
+        </p>
+        <a href="/choose" class="cta-button">Get Started Now</a>
+      </div>
+      <!-- Placeholder for a hero image -->
+      <div class="hero-image">
+        <img src="{{ url_for('static', filename='images/quantum_hero.jpg') }}" alt="Quantum Computing" />
+      </div>
+    </section>
+
+    <!-- WHAT IS QFL SECTION -->
+    <section id="what-is-qfl">
+      <h2>What Is Quantum Federated Learning (QFL)?</h2>
+      <p>
+        <strong>Quantum Federated Learning</strong> is an emerging discipline combining the distributed 
+        power of <em>federated learning</em> with the computational advantages of <em>quantum computing</em>. 
+        By training models across decentralized data sources while leveraging quantum-enhanced algorithms, 
+        QFL opens up new possibilities in speed, security, and overall performance.
+      </p>
+      <ul>
+        <li><strong>Data Privacy:</strong> Federated learning ensures data stays where it is generated, reducing security risks.</li>
+        <li><strong>Quantum Acceleration:</strong> Quantum algorithms may solve complex problems faster than classical counterparts.</li>
+        <li><strong>Scalability:</strong> Ideal for large-scale collaborative projects across multiple sites or devices.</li>
+      </ul>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section id="features">
+      <h2>Key Features of Our Simulator</h2>
+      <div class="features-container">
+        <div class="feature-box">
+          <h3>Intuitive Interface</h3>
+          <p>Configure and customize quantum and classical settings through user-friendly controls.</p>
+        </div>
+        <div class="feature-box">
+          <h3>End-to-End Simulation</h3>
+          <p>Run experiments from data distribution and federated training to quantum circuit simulation.</p>
+        </div>
+        <div class="feature-box">
+          <h3>Modular Design</h3>
+          <p>Plug in different quantum backends and classical machine learning frameworks with minimal fuss.</p>
+        </div>
+        <div class="feature-box">
+          <h3>Analytics & Visualization</h3>
+          <p>Track model performance, compare classical vs. quantum approaches, and visualize training progress.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS SECTION -->
+    <section id="how-it-works">
+      <h2>How It Works</h2>
+      <div class="how-it-works-steps">
+        <div class="step">
+          <h3>1. Configure</h3>
+          <p>Choose your quantum circuit parameters, data split strategies, and federated learning configurations.</p>
+        </div>
+        <div class="step">
+          <h3>2. Simulate</h3>
+          <p>Run classical or quantum-enhanced training across distributed nodes in real time or batch mode.</p>
+        </div>
+        <div class="step">
+          <h3>3. Analyze</h3>
+          <p>Evaluate accuracy, loss, and training time metrics. Visualize results and compare performance.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CALL TO ACTION -->
+    <section id="cta">
+      <h2>Ready to Explore the Future?</h2>
+      <p>Delve deeper into quantum federated learning with our hands-on simulator.</p>
+      <a href="/choose" class="cta-button">Configure Your Experiment</a>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 Quantum Federated Learning Simulator. All rights reserved.</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configure Custom Data Simulation</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    /* Modal styling */
+    .modal {
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      width: 50%;
+      border-radius: 8px;
+      max-height: 80vh;       /* Limits modal height to 80% of viewport height */
+      overflow-y: auto;       /* Allows vertical scrolling if content overflows */
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Quantum Federated Learning Simulator</h1>
+    <nav>
+      <ul>
+        <li><a href="/" class="{{ 'active' if request.path == '/' else '' }}">Home</a></li>
+        <li><a href="/about" class="{{ 'active' if request.path == '/about' else '' }}">About</a></li>
+        <li><a href="/contact" class="{{ 'active' if request.path == '/contact' else '' }}">Contact</a></li>
+        <li><a href="/choose" class="{{ 'active' if request.path == '/choose' else '' }}">Configure</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <form id="simulationForm">
+      <label for="fl_type">Type of FL:</label>
+      <input type="text" id="fl_type" name="fl_type" value="Quantum Federated Learning" readonly />
+      <br><br>
+  
+      <label for="upload_dataset">Upload Dataset:</label>
+      <input type="file" id="upload_dataset" name="upload_dataset" accept=".csv" required />
+      <br><br>
+  
+      <label for="data_type">Data Type:</label>
+      <select id="data_type" name="data_type">
+        <option value="csv" selected>CSV</option>
+      </select>
+      <br><br>
+  
+      <label for="num_clients">Number of Clients:</label>
+      <input type="number" id="num_clients" name="num_clients" min="1" max="100" value="3" required />
+      <br><br>
+      <label for="local_epochs">Number of Local Epochs:</label>
+      <input type="number" id="local_epochs" name="local_epochs" min="1" max="100" value="1">
+      <br>
+      <label for="global_epochs">Number of Global Epochs:</label>
+      <input type="number" id="global_epochs" name="global_epochs" min="1" max="500" value="100">
+      <br>
+      <label for="num_qubits">Number of Qubits (n):</label>
+      <input type="number" id="num_qubits" name="num_qubits" min="1" value="10" required />
+      <br><br>
+  
+      <label for="num_layers">Number of Quantum Layers (L):</label>
+      <input type="number" id="num_layers" name="num_layers" min="1" value="1" required />
+      <br><br>
+  
+      <label for="quantum_encoding">Quantum Encoding:</label>
+      <select id="quantum_encoding" name="quantum_encoding">
+        <option value="amplitude" selected>Amplitude Encoding</option>
+      </select>
+      <br><br>
+  
+      <label for="ansatz">Ansatz:</label>
+      <select id="ansatz" name="ansatz">
+        <option value="Paramerised Quantum Circuit" selected>Paramerised Quantum Circuit</option>
+      </select>
+      <br><br>
+  
+      <label for="measurement">Measurement Observable:</label>
+      <select id="measurement" name="measurement">
+        <option value="probability" selected>Pauli-Z</option>
+      </select>
+      <br><br>
+  
+      <label for="differential">Differentiation Technique:</label>
+      <select id="differential" name="differential">
+        <option value="parameter_shift" selected>Parameter Shift</option>
+      </select>
+      <br><br>
+  
+      <label for="loss_function">Loss Function:</label>
+      <select id="loss_function" name="loss_function">
+        <option value="cross_entropy" selected>Cross Entropy Loss</option>
+      </select>
+      <br><br>
+  
+      <label for="optimizer">Optimizer:</label>
+      <select id="optimizer" name="optimizer">
+        <option value="adam" selected>Adam</option>
+      </select>
+      <br><br>
+  
+      <button type="submit">Upload & Start Simulation</button>
+    </form>
+  </main>
+  
+  <!-- === Modal Popup === -->
+  <div id="featureModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <h3>Select Features for Simulation</h3>
+      <form id="featureForm" method="POST" action="/start_simulation_custom_final">
+        <div id="featureSelectionArea"></div>
+  
+        <br>
+        <label for="output_feature">Select Output Feature:</label>
+        <select id="output_feature" name="output_feature" required></select>
+  
+        <br><br>
+        <button type="submit">Start Simulation</button>
+      </form>
+    </div>
+  </div>
+  
+  <footer>
+    <p>© 2025 Quantum Federated Learning Simulator. All rights reserved.</p>
+  </footer>
+  
+  <script>
+    const form = document.getElementById("simulationForm");
+  
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();  // Prevent default form submission
+  
+      const fileInput = document.getElementById("upload_dataset");
+      const file = fileInput.files[0];  // Get the uploaded file
+      const formData = new FormData();
+      formData.append("upload_dataset", file);  // Append file to form data
+  
+      // API call to get CSV headers
+      fetch("/get_headers", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.headers) {
+          const headers = data.headers;
+          const featureArea = document.getElementById("featureSelectionArea");
+          const outputDropdown = document.getElementById("output_feature");
+  
+          // Clear previous content
+          featureArea.innerHTML = '';
+          outputDropdown.innerHTML = '';
+  
+          // Populate with each column header
+          headers.forEach(col => {
+            featureArea.innerHTML += `
+              <label>${col}:
+                <select name="include_${col}">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </label><br>
+            `;
+            outputDropdown.innerHTML += `<option value="${col}">${col}</option>`;
+          });
+  
+          // Show modal popup
+          document.getElementById("featureModal").style.display = "flex";
+        } else {
+          alert('No headers found or something went wrong.');
+        }
+      })
+      .catch(err => {
+        console.error('Error fetching headers:', err);
+        alert('There was an error fetching the data.');
+      });
+    });
+  </script>
+  
+</body>
+</html>

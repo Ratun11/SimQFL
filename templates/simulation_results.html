@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulation Results - Quantum Federated Learning Simulator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <!-- Include Chart.js from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Include jsPDF for PDF downloads -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    canvas { max-width: 400px; max-height: 250px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Quantum Federated Learning Simulation</h1>
+    <nav>
+      <ul>
+        <li><a href="/" class="{{ 'active' if request.path == '/' else '' }}">Home</a></li>
+        <li><a href="/about" class="{{ 'active' if request.path == '/about' else '' }}">About</a></li>
+        <li><a href="/contact" class="{{ 'active' if request.path == '/contact' else '' }}">Contact</a></li>
+        <li><a href="/simulate" class="{{ 'active' if request.path == '/choose' else '' }}">Configure</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <p id="simulationSummary">
+      Federated Learning simulation is running on <strong>{{ dataset }}</strong> data with <strong>{{ num_clients }}</strong> clients using <strong>{{ data_type }}</strong> partitioning, <strong>{{ local_epochs }}</strong> local epochs and <strong>{{ global_epochs }}</strong> global epochs.
+      {% if num_qubits and num_layers %}
+        <br>Quantum Parameters: <strong>{{ num_qubits }}</strong> qubits, <strong>{{ num_layers }}</strong> quantum layers.
+      {% endif %}
+      {% if fl_type == "quantum_federated" %}
+        <br>Quantum Options:
+        <ul>
+          <li>Encoding: {{ quantum_encoding }}</li>
+          <li>Ansatz: {{ ansatz }}</li>
+          <li>Measurement: {{ measurement }}</li>
+          <li>Differential Technique: {{ differential }}</li>
+          <li>Loss Function: {{ loss_function }}</li>
+          <li>Optimizer: {{ optimizer_choice }}</li>
+        </ul>
+      {% endif %}
+    </p>
+    <a href="/simulate" class="btn-main">Back to Simulation Setup</a>
+    <br>
+    <button id="stopBtn">Stop Simulation</button>
+    <br><br>
+    <!-- CSV and Graph download buttons -->
+    <button id="downloadBtn" style="display:none;">Download CSV</button>
+    <!-- Loss chart download buttons -->
+    <button id="downloadLossPNGBtn" style="display:none;">Download Loss Graph as PNG</button>
+    <button id="downloadLossPDFBtn" style="display:none;">Download Loss Graph as PDF</button>
+    <!-- Accuracy chart download buttons -->
+    <button id="downloadAccPNGBtn" style="display:none;">Download Accuracy Graph as PNG</button>
+    <button id="downloadAccPDFBtn" style="display:none;">Download Accuracy Graph as PDF</button>
+    <div id="results">
+      <table border="1" cellspacing="0" cellpadding="8" id="resultsTable">
+        <thead>
+          <tr>
+            <th>Global Epoch</th>
+            <th>Test Loss</th>
+            <th>Test Accuracy</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Rows added dynamically -->
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <canvas id="lossChart"></canvas>
+    </div>
+    <div>
+      <canvas id="accuracyChart"></canvas>
+    </div>
+    <!-- Back Button -->
+    <br>
+    
+  </main>
+  <footer>
+    <p>© 2025 Quantum Federated Learning Simulator. All rights reserved.</p>
+  </footer>
+  <script>
+    // Prepare simulation parameters from Flask, including extra quantum options.
+    const params = {
+      fl_type: "{{ fl_type }}",
+      dataset: "{{ dataset }}",
+      num_clients: "{{ num_clients }}",
+      data_type: "{{ data_type }}",
+      local_epochs: "{{ local_epochs }}",
+      global_epochs: "{{ global_epochs }}",
+      num_qubits: "{{ num_qubits }}",
+      num_layers: "{{ num_layers }}",
+      quantum_encoding: "{{ quantum_encoding }}",
+      ansatz: "{{ ansatz }}",
+      measurement: "{{ measurement }}",
+      differential: "{{ differential }}",
+      loss_function: "{{ loss_function }}",
+      optimizer_choice: "{{ optimizer_choice }}"
+    };
+    const queryString = new URLSearchParams(params).toString();
+    const evtSource = new EventSource("/stream_simulation?" + queryString);
+
+    const tableBody = document.querySelector("#resultsTable tbody");
+    const epochs = [];
+    const lossData = [];
+    const accuracyData = [];
+
+    // Set up Loss chart
+    const lossCtx = document.getElementById('lossChart').getContext('2d');
+    const lossChart = new Chart(lossCtx, {
+      type: 'line',
+      data: {
+        labels: epochs,
+        datasets: [{
+          label: 'Test Loss',
+          data: lossData,
+          borderColor: 'rgba(255, 99, 132, 1)',
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          fill: false
+        }]
+      },
+      options: {
+        scales: {
+          x: { title: { display: true, text: 'Global Epoch' } },
+          y: { title: { display: true, text: 'Loss' } }
+        }
+      }
+    });
+
+    // Set up Accuracy chart
+    const accuracyCtx = document.getElementById('accuracyChart').getContext('2d');
+    const accuracyChart = new Chart(accuracyCtx, {
+      type: 'line',
+      data: {
+        labels: epochs,
+        datasets: [{
+          label: 'Test Accuracy',
+          data: accuracyData,
+          borderColor: 'rgba(54, 162, 235, 1)',
+          backgroundColor: 'rgba(54, 162, 235, 0.2)',
+          fill: false
+        }]
+      },
+      options: {
+        scales: {
+          x: { title: { display: true, text: 'Global Epoch' } },
+          y: { title: { display: true, text: 'Accuracy' } }
+        }
+      }
+    });
+
+    evtSource.onopen = function() {
+      console.log("Connected to simulation stream.");
+    };
+
+    evtSource.onmessage = function(event) {
+      const result = JSON.parse(event.data);
+      if (result.complete) {
+        evtSource.close();
+        document.getElementById("downloadBtn").style.display = "block";
+        document.getElementById("downloadLossPNGBtn").style.display = "block";
+        document.getElementById("downloadLossPDFBtn").style.display = "block";
+        document.getElementById("downloadAccPNGBtn").style.display = "block";
+        document.getElementById("downloadAccPDFBtn").style.display = "block";
+        return;
+      }
+      // Append new row for the current epoch
+      const row = document.createElement("tr");
+      row.innerHTML = `<td>${result.global_epoch}</td><td>${result.loss.toFixed(4)}</td><td>${result.accuracy.toFixed(4)}</td>`;
+      tableBody.appendChild(row);
+
+      // Update charts
+      epochs.push(result.global_epoch);
+      lossData.push(result.loss);
+      accuracyData.push(result.accuracy);
+      lossChart.update();
+      accuracyChart.update();
+    };
+
+    evtSource.onerror = function(err) {
+      console.error("EventSource error:", err);
+    };
+
+    // CSV download button
+    document.getElementById("downloadBtn").addEventListener("click", function() {
+      window.location.href = "/download_csv";
+    });
+
+    // Loss chart PNG download
+    document.getElementById("downloadLossPNGBtn").addEventListener("click", function() {
+      const link = document.createElement('a');
+      link.href = lossChart.toBase64Image();
+      link.download = 'loss_chart.png';
+      link.click();
+    });
+
+    // Accuracy chart PNG download
+    document.getElementById("downloadAccPNGBtn").addEventListener("click", function() {
+      const link = document.createElement('a');
+      link.href = accuracyChart.toBase64Image();
+      link.download = 'accuracy_chart.png';
+      link.click();
+    });
+
+    // Loss chart PDF download using jsPDF
+    document.getElementById("downloadLossPDFBtn").addEventListener("click", function() {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF();
+      pdf.addImage(lossChart.toBase64Image(), 'PNG', 15, 40, 180, 160);
+      pdf.save('loss_chart.pdf');
+    });
+
+    // Accuracy chart PDF download using jsPDF
+    document.getElementById("downloadAccPDFBtn").addEventListener("click", function() {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF();
+      pdf.addImage(accuracyChart.toBase64Image(), 'PNG', 15, 40, 180, 160);
+      pdf.save('accuracy_chart.pdf');
+    });
+
+    // Stop simulation button
+    document.getElementById("stopBtn").addEventListener("click", function() {
+      fetch("/stop_simulation", { method: "POST" })
+        .then(response => response.text())
+        .then(data => {
+          console.log(data);
+          evtSource.close();
+          // Reveal download buttons after stopping
+          document.getElementById("downloadBtn").style.display = "block";
+          document.getElementById("downloadLossPNGBtn").style.display = "block";
+          document.getElementById("downloadLossPDFBtn").style.display = "block";
+          document.getElementById("downloadAccPNGBtn").style.display = "block";
+          document.getElementById("downloadAccPDFBtn").style.display = "block";
+        })
+        .catch(err => console.error("Error stopping simulation:", err));
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quantum Federated Learning Simulator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <header>
+    <h1>Quantum Federated Learning Simulator</h1>
+    <nav>
+      <ul>
+        <li><a href="/" class="{{ 'active' if request.path == '/' else '' }}">Home</a></li>
+        <li><a href="/about" class="{% if request.path == '/about' %}active{% endif %}">About</a></li>
+        <li><a href="/contact" class="{{ 'active' if request.path == '/contact' else '' }}">Contact</a></li>
+        <li><a href="/choose" class="{{ 'active' if request.path == '/choose' else '' }}">Configure</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="choose-data">
+      <div class="section-content">
+        <h2>🚀 Choose Your Data Type</h2>
+        <p class="intro-text">
+          Select the type of dataset you'd like to use to simulate quantum federated learning.
+        </p>
+
+        <div class="cards-container">
+          <!-- Standard Data Card -->
+          <div class="data-card">
+            <h3>Standard Dataset</h3>
+            <p>Use popular datasets like <strong>MNIST</strong>, <strong>Fashion-MNIST</strong>, or <strong>CIFAR-100</strong> to start fast.</p>
+            <form action="/simulate" method="get">
+              <button type="submit" class="btn-main-left">Use Standard Data</button>
+            </form>
+          </div>
+
+          <!-- Upload Data Card -->
+          <div class="data-card">
+            <h3>Upload Your Own Data</h3>
+            <p>Bring your own dataset for a fully customized and federated quantum simulation.</p>
+            <form action="/simulate_own" method="get">
+              <button type="submit" class="btn-main-right">Upload Your Data</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 Quantum Federated Learning Simulator. All rights reserved.</p>
+  </footer>
+</body>
+</html>

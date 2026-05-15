@@ -1,0 +1,568 @@
+/* styles.css */
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Header styling */
+header {
+    background-color: #283593; /* A deep blue color for the header background */
+    color: white; /* White text for contrast */
+    width: 250px; /* Width of the header */
+    height: 100vh; /* Full viewport height */
+    padding: 20px; /* Padding around the content inside the header */
+    box-shadow: 3px 0 15px rgba(0,0,0,0.2); /* Adds a shadow to the right side of the header */
+    position: fixed; /* Fixed position to keep it in place when scrolling */
+    top: 0; /* Align to the top of the viewport */
+    left: 0; /* Align to the left side of the viewport */
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Stack children vertically */
+    justify-content: flex-start; /* Align children to the start */
+    align-items: center; /* Center items on the cross axis */
+    overflow: hidden; /* Hide any overflow */
+}
+
+/* Header title styling */
+header h1 {
+    font-size: 20px; /* Smaller font size to ensure it fits in the header */
+    white-space: normal; /* Allow the text to wrap if necessary */
+    text-align: center; /* Center align the text */
+    width: 100%; /* Full width of the header to align text properly */
+    margin-bottom: 20px; /* Space below the title */
+    padding: 0 10px; /* Padding on the sides for spacing */
+    border-bottom: 1px solid #ccc; /* A subtle line under the title for separation */
+}
+
+/* Navigation link styling */
+header nav ul {
+    list-style-type: none; /* Remove bullet points from the list */
+    padding: 0; /* Remove padding */
+    width: 100%; /* Full width of the header */
+}
+
+header nav ul li {
+    margin-bottom: 15px; /* Space between each navigation item */
+}
+
+header nav ul li a {
+    text-decoration: none; /* No underline on links */
+    color: white; /* White text color */
+    padding: 10px 15px; /* Padding for better touch area and visibility */
+    display: block; /* Block display to allow for padding */
+    border-radius: 5px; /* Rounded corners for a modern look */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effects */
+    width: 100%; /* Full width to extend the clickable area */
+}
+
+header nav ul li a:hover, header nav ul li a.active {
+    background-color: #1A237E; /* A darker shade of blue on hover/active */
+    color: #FFD740; /* Yellow text color for contrast on hover/active */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f4f4;
+    display: flex; /* Enables flex layout for the whole page */
+    min-height: 100vh; /* Ensures minimum height matches viewport height */
+    margin: 0; /* Removes default margin */
+}
+
+section {
+    margin: 20px;
+    padding: 20px;
+    background: white; /* White background for content sections */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Subtle shadow around sections */
+}
+
+main {
+    flex-grow: 1; /* Allows the main content to fill the space */
+    margin-left: 250px; /* Offset to the right by the width of the header */
+    padding: 20px; /* Adds padding inside the main content area */
+    overflow: auto; /* Adds scroll to main if content overflows */
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin: 20px auto;
+}
+
+.btn-main-left,
+.btn-main-right {
+    padding: 15px 30px;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    width: 45%;
+    text-align: center;
+}
+
+.btn-main-left {
+    background-color: #007BFF; /* Vibrant blue */
+}
+
+.btn-main-right {
+    background-color: #58c027; /* Green */
+}
+
+/* Hover effect for both buttons */
+.btn-main-left:hover,
+.btn-main-right:hover {
+    background-color: red;
+}
+
+.btn-main:hover {
+    background-color: #b30000; /* Darker blue on hover */
+}
+
+/* Form Styling */
+form {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+}
+
+label {
+    display: block;
+    margin: 15px 0 5px;
+}
+
+input[type="number"], select {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0 20px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Makes sure padding doesn't affect width */
+}
+
+input[type="number"]:focus, select:focus {
+    border-color: #6658D3;
+    box-shadow: 0 0 8px rgba(102, 88, 211, 0.5);
+}
+
+button {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* Additional styling to make text inputs and selects visually consistent */
+input[type="number"] {
+    height: 38px; /* Match height of select elements */
+    font-size: 16px; /* Larger font size for better readability */
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #283593;
+    color: white;
+    position: fixed; /* Fixes footer to the bottom */
+    bottom: 0; /* Aligns footer at the bottom */
+    left: 250px; /* Aligns with the main content */
+    right: 0; /* Stretches footer to right edge */
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.2); /* Shadow on top */
+}
+
+/* Hero Section */
+#hero {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    background: #e0e7ff; /* Light background for hero area */
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.hero-content {
+    flex: 1 1 50%;
+    margin-bottom: 1rem;
+}
+
+.hero-content h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.hero-content p {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+}
+
+.hero-image {
+    flex: 1 1 50%;
+    text-align: center;
+}
+
+.hero-image img {
+    max-width: 40%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* CTA Button */
+.cta-button {
+    display: inline-block;
+    background: #6c63ff; 
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.cta-button:hover {
+    background: #574bdc;
+}
+
+/* Section Titles */
+section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+/* What is QFL Section */
+#what-is-qfl {
+    background: #eeeeee;
+    color: #000;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+/* Features Section */
+#features {
+    margin-bottom: 2rem;
+}
+
+.features-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+
+.feature-box {
+    background: #eeeeee;
+    color: #000;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.feature-box h3 {
+    margin-bottom: 0.5rem;
+}
+
+/* How It Works Section */
+#how-it-works {
+    background: #eeeeee;
+    color: #000;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.how-it-works-steps {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.step {
+    background: #e0e7ff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.step h3 {
+    margin-bottom: 0.5rem;
+}
+
+/* Call to Action */
+#cta {
+    text-align: center;
+    background: #e0e7ff;
+    color: #000000;
+    padding: 2rem;
+    border-radius: 8px;
+}
+
+#cta p {
+    margin-bottom: 1rem;
+}
+
+/* System-based Color Mode Styles (Dark Mode) */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #121212;
+        color: #e0e0e0;
+    }
+
+    header {
+        background-color: #1e1e1e;
+        box-shadow: 3px 0 15px rgba(0, 0, 0, 0.7);
+    }
+
+    header h1 {
+        border-bottom: 1px solid #444;
+    }
+
+    header nav ul li a {
+        color: #e0e0e0;
+    }
+
+    header nav ul li a:hover,
+    header nav ul li a.active {
+        background-color: #333;
+        color: #FFD740;
+    }
+
+    main {
+        background-color: #121212;
+    }
+
+    section {
+        background: #1e1e1e;
+        box-shadow: 0 0 10px rgba(0,0,0,0.7);
+    }
+
+    form {
+        background: #1e1e1e;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+    }
+
+    input[type="number"], select {
+        background-color: #2c2c2c;
+        color: #e0e0e0;
+        border: 1px solid #444;
+    }
+
+    input[type="number"]:focus, select:focus {
+        border-color: #6658D3;
+        box-shadow: 0 0 8px rgba(102, 88, 211, 0.7);
+    }
+
+    button {
+        background-color: #4CAF50;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    footer {
+        background-color: #1e1e1e;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.7);
+    }
+
+    /* Hero Section */
+    #hero {
+        background: #2c2c2c;
+    }
+
+    /* CTA Button remains similar */
+    .cta-button {
+        background: #6c63ff;
+    }
+}
+.cta-button:hover {
+    background: #574bdc;
+}
+
+/* =======================================================================
+   Section Titles & Additional Elements on About Page
+======================================================================== */
+section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+/* -------------------------------
+   Equations Styling (MathJax)
+---------------------------------- */
+.equation {
+    margin: 20px 0;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+/* -------------------------------
+   Figure Styling (for QFL Overview)
+---------------------------------- */
+#qfl-overview figure {
+    margin: 20px auto;
+    max-width: 100%;
+}
+
+#qfl-overview figcaption {
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 10px;
+    color: #555;
+}
+.equation {
+    margin: 20px 0;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.algorithm-box {
+    background: #ffffff;
+    color: #000000;
+    border-left: 6px solid #6c63ff;
+    padding: 20px 25px;
+    border-radius: 10px;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    color: #222;
+    margin-bottom: 2rem;
+  }
+  
+  .algo-block {
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 10px;
+  }
+  
+  .algo-step {
+    color: #6c63ff;
+    font-weight: bold;
+    margin-right: 5px;
+  }
+  
+  .algo-indent {
+    margin-left: 25px;
+    margin-top: 8px;
+  }
+  
+  .algo-line {
+    margin: 5px 0;
+    padding-left: 8px;
+    position: relative;
+  }
+  
+  .algo-line::before {
+    content: "›";
+    position: absolute;
+    left: 0;
+    color: #aaa;
+  }
+  
+/* Choose Page Enhancements */
+#choose-data {
+    padding: 40px;
+    text-align: center;
+  }
+  
+  #choose-data .section-content {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  #choose-data h2 {
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+  }
+  
+  #choose-data .intro-text {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    color: #01d46a;
+  }
+  
+  /* Cards Container */
+.cards-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    margin: 0 auto;
+    flex-wrap: wrap;  /* Wrap on smaller screens */
+  }
+  
+  /* Individual Card */
+  .data-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 30px 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 20px;
+    width: 90%;  /* Default: 90% width on small screens */
+  }
+  
+  /* Card Hover Effect */
+  .data-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Card Content Styling */
+  .data-card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    color: #283593;
+  }
+  
+  .data-card p {
+    font-size: 1rem;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  /* Button Styling inside Card */
+  .data-card form button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+  }
+  
+  /* What is QFL Section */
+#what-is-qfl {
+    background: #b6b6b6;
+    color: #000;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+  /* On larger screens (min-width: 1300px):
+     Force two cards side-by-side with fixed width */
+  @media (min-width: 1300px) {
+    .cards-container {
+      flex-wrap: nowrap;  /* No wrapping */
+    }
+    .data-card {
+      width: 600px;  /* Fixed width for each card */
+    }
+  }
+  
+  

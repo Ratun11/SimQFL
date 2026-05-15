@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Quantum Federated Learning Simulator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Quantum Federated Learning Simulator</h1>
+        <nav>
+            <ul>
+                <li><a href="/" class="{{ 'active' if request.path == '/' else '' }}">Home</a></li>
+                <li><a href="/about" class="{{ 'active' if request.path == '/about' else '' }}">About</a></li>
+                <li><a href="/contact" class="{{ 'active' if request.path == '/contact' else '' }}">Contact</a></li>
+                <li><a href="/choose" class="{{ 'active' if request.path == '/choose' else '' }}">Configure</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="contact-box">
+            <h2>Contact Us</h2>
+            <p>If you have any questions or need further information, please don't hesitate to reach out to us:</p>
+            <div class="contact-info">
+                <p><strong>Email:</strong> <a href="mailto:rr0110@uah.edu">rr0110@uah.edu</a></p>
+                <p><strong>Phone:</strong> +1 256 479 9640</p>
+                <p><strong>Address:</strong> The University of Alabama in Huntsville</p>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>© 2025 Quantum Federated Learning Simulator. All rights reserved.</p>
+    </footer>
+</body>
+</html>

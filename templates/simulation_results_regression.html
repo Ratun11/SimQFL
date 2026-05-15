@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regression Simulation Results - Quantum Federated Learning Simulator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <!-- Include Chart.js from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Include jsPDF for PDF downloads -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    canvas { max-width: 400px; max-height: 250px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Quantum Federated Learning Regression Simulation</h1>
+    <nav>
+      <ul>
+        <li><a href="/" class="{{ 'active' if request.path == '/' else '' }}">Home</a></li>
+        <li><a href="/about" class="{{ 'active' if request.path == '/about' else '' }}">About</a></li>
+        <li><a href="/contact" class="{{ 'active' if request.path == '/contact' else '' }}">Contact</a></li>
+        <li><a href="/choose" class="{{ 'active' if request.path == '/choose' else '' }}">Configure</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <p id="simulationSummary">
+      Regression Simulation is running using the selected features.
+      Predicting <strong>{{ selected_feature_config["output_feature"] }}</strong> from the input features.
+    </p>
+    <!-- Back to Simulation Setup Button with inline styling -->
+    <a href="/choose" class="btn-main" style="display: inline-block; margin: 10px 0; padding: 8px 16px; background-color: #007BFF; color: white; text-decoration: none; border-radius: 4px;">Back to Simulation Setup</a>
+    <br>
+    <button id="stopBtn">Stop Simulation</button>
+    <br><br>
+    <!-- CSV and Graph download buttons -->
+    <button id="downloadBtn" style="display:none;">Download CSV</button>
+    <!-- MSE chart download buttons -->
+    <button id="downloadMsePNGBtn" style="display:none;">Download MSE Chart as PNG</button>
+    <button id="downloadMsePDFBtn" style="display:none;">Download MSE Chart as PDF</button>
+    <div id="results">
+      <table border="1" cellspacing="0" cellpadding="8" id="resultsTable">
+        <thead>
+          <tr>
+            <th>Global Epoch</th>
+            <th>MSE</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Rows added dynamically -->
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <canvas id="mseChart"></canvas>
+    </div>
+    <br>
+  </main>
+  <footer>
+    <p>© 2025 Quantum Federated Learning Simulator. All rights reserved.</p>
+  </footer>
+  <script>
+    // For regression simulation, using fixed parameters (or these could be passed via query parameters)
+    const params = {
+      num_clients: 3,
+      local_epochs: 1,
+      global_epochs: 100, // Updated default: runs for 100 epochs
+      num_qubits: 10,
+      num_layers: 1,
+      learning_rate: 0.01
+    };
+    const queryString = new URLSearchParams(params).toString();
+    const evtSource = new EventSource("/stream_simulation_regression?" + queryString);
+
+    const tableBody = document.querySelector("#resultsTable tbody");
+    const epochs = [];
+    const mseData = [];
+
+    // Set up MSE chart using Chart.js
+    const mseCtx = document.getElementById('mseChart').getContext('2d');
+    const mseChart = new Chart(mseCtx, {
+      type: 'line',
+      data: {
+        labels: epochs,
+        datasets: [{
+          label: 'Mean Squared Error',
+          data: mseData,
+          borderColor: 'rgba(255, 159, 64, 1)',
+          backgroundColor: 'rgba(255, 159, 64, 0.2)',
+          fill: false
+        }]
+      },
+      options: {
+        scales: {
+          x: { title: { display: true, text: 'Global Epoch' } },
+          y: { title: { display: true, text: 'MSE' } }
+        }
+      }
+    });
+
+    evtSource.onopen = function() {
+      console.log("Connected to regression simulation stream.");
+    };
+
+    evtSource.onmessage = function(event) {
+      const result = JSON.parse(event.data);
+      if (result.complete) {
+        evtSource.close();
+        document.getElementById("downloadBtn").style.display = "block";
+        document.getElementById("downloadMsePNGBtn").style.display = "block";
+        document.getElementById("downloadMsePDFBtn").style.display = "block";
+        return;
+      }
+      // Append a new row to the results table
+      const row = document.createElement("tr");
+      row.innerHTML = `<td>${result.global_epoch}</td><td>${result.mse.toFixed(4)}</td>`;
+      tableBody.appendChild(row);
+
+      // Update chart data
+      epochs.push(result.global_epoch);
+      mseData.push(result.mse);
+      mseChart.update();
+    };
+
+    evtSource.onerror = function(err) {
+      console.error("EventSource error:", err);
+    };
+
+    // CSV download button event
+    document.getElementById("downloadBtn").addEventListener("click", function() {
+      window.location.href = "/download_csv";
+    });
+
+    // MSE chart PNG download event
+    document.getElementById("downloadMsePNGBtn").addEventListener("click", function() {
+      const link = document.createElement('a');
+      link.href = mseChart.toBase64Image();
+      link.download = 'mse_chart.png';
+      link.click();
+    });
+
+    // MSE chart PDF download event using jsPDF
+    document.getElementById("downloadMsePDFBtn").addEventListener("click", function() {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF();
+      pdf.addImage(mseChart.toBase64Image(), 'PNG', 15, 40, 180, 160);
+      pdf.save('mse_chart.pdf');
+    });
+
+    // Stop simulation button event
+    document.getElementById("stopBtn").addEventListener("click", function() {
+      fetch("/stop_simulation", { method: "POST" })
+        .then(response => response.text())
+        .then(data => {
+          console.log(data);
+          evtSource.close();
+          document.getElementById("downloadBtn").style.display = "block";
+          document.getElementById("downloadMsePNGBtn").style.display = "block";
+          document.getElementById("downloadMsePDFBtn").style.display = "block";
+        })
+        .catch(err => console.error("Error stopping simulation:", err));
+    });
+  </script>
+</body>
+</html>

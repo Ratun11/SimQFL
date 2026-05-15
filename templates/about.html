@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - Quantum Federated Learning Simulator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <!-- Include MathJax for LaTeX rendering -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Federated Learning Simulator</h1>
+    <nav>
+      <ul>
+        <li><a href="/" class="{{ 'active' if request.path == '/' else '' }}">Home</a></li>
+        <li><a href="/about" class="{{ 'active' if request.path == '/about' else '' }}">About</a></li>
+        <li><a href="/contact" class="{{ 'active' if request.path == '/contact' else '' }}">Contact</a></li>
+        <li><a href="/choose" class="{{ 'active' if request.path == '/choose' else '' }}">Configure</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <!-- Introduction Section -->
+    <section id="introduction">
+      <h2>About Quantum Federated Learning</h2>
+      <p>
+        Quantum Federated Learning (QFL) is a machine learning technique that trains algorithms across multiple decentralized devices without exchanging raw data. This approach helps protect users' privacy and reduces communication costs.
+      </p>
+    </section>
+
+    <!-- Figure Section -->
+    <section id="qfl-overview">
+      <figure>
+        <!-- Change the file extension if needed (e.g., .png) -->
+        <img src="{{ url_for('static', filename='images/qfl_overview.png') }}" alt="Quantum Computing" />
+        <figcaption>
+          Overview of the QFL architecture with N quantum clients and a classical server within the QFL framework. Each client encodes conventional input into quantum states and is trained using local Quantum Machine Learning (QML) models. The server aggregates the parameters of the local models and updates the global model parameters for the next round.
+        </figcaption>
+      </figure>
+    </section>
+
+    <!-- QFL Framework Section -->
+    <section id="qfl-framework">
+        <h2>QFL Framework</h2>
+      
+        <p>
+          The QFL framework involves \( N \) distributed clients collaboratively training a shared quantum neural network (QNN) model over \( R \) global communication rounds. In each global round \( r \in \{1, \dots, R\} \), clients \( n \in \{1, \dots, N\} \) perform \( K \) local training epochs on their private datasets \( D_n \) without sharing raw data. After local training, each client sends its updated model parameters to a central server, which aggregates them to update the global model.
+        </p>
+      
+        <p><strong>Quantum Encoding:</strong><br>
+          Each client \( n \) at global round \( r \) maps classical input data \( w \in \mathbb{R}^d \) into a quantum state using amplitude encoding. This method efficiently embeds classical vectors into quantum states by encoding their components into the amplitudes of computational basis states. For a \( 2^{Q_n} \)-dimensional input vector, only \( Q_n \) qubits are needed.
+          Given a classical vector \( w \in \mathbb{R}^{2^{Q_n}} \), its amplitude-encoded quantum state is:
+        </p>
+      
+        <div class="equation">$$
+        |\psi_{\text{enc}}(w)\rangle = \frac{1}{\|w\|} \sum_{i=0}^{2^{Q_n}-1} w_i |i\rangle
+        $$</div>
+      
+        <p>
+          where \( \|w\| \) is the \( \ell_2 \)-norm of the vector, and \( |i\rangle \) denotes the computational basis states. This encoding can be represented as:
+        </p>
+      
+        <p>
+          \( |\psi_{\text{enc}}(w)\rangle = U_{\text{enc}}(w) |0\rangle^{\otimes Q_n} \)
+        </p>
+      
+        <p><strong>Local model training:</strong><br>
+          Each client applies a PQC \( U(\omega_{n,r}^{k}) \) to the encoded state \( |\psi_{\text{enc}}(w)\rangle \). The PQC consists of \( L \) layers combining trainable single-qubit gates (e.g., \( R_x \), \( R_y \), \( R_z \)) and entangling gates (e.g., CNOT). The unitary is:
+        </p>
+      
+        <div class="equation">$$
+        U(\omega_{n,r}^{k}) = \prod_{d=1}^L U_d(\omega_{n,r,d}^{k})
+        $$</div>
+      
+        <p>
+          where \( U_d(\omega_{n,r,d}^{k}) = \exp\left(-i \frac{\omega_{n,r,d}^{k}}{2} G_d\right) \) and \( G_d \) is a Hermitian generator (e.g., Pauli string). The output state is:
+        </p>
+      
+        <div class="equation">$$
+        |\psi_{\text{out}}(w, \omega_{n,r}^{k})\rangle = U(\omega_{n,r}^{k}) |\psi_{\text{enc}}(w)\rangle
+        $$</div>
+      
+        <p>
+          Measurement using observable \( O \) (e.g., Pauli-Z) gives:
+        </p>
+      
+        <div class="equation">$$
+        f(w, \omega_{n,r}^{k}) = \langle \psi_{\text{out}} | O | \psi_{\text{out}} \rangle
+        $$</div>
+      
+        <p>
+          With \( M \) measurement shots:
+          \( \hat{f}_{n,r}^{k}(w, \omega_{n,r}^{k}) = \frac{1}{M} \sum_{j=1}^{M} H_j \),
+          where \( H_j \) are measurement results.
+        </p>
+      
+        <p>
+          For data point \( (w, y) \), loss is \( \ell(y, \hat{f}_{n,r}^{k}(w, \omega_{n,r}^{k})) \). Over a batch \( B_n^k \), batch loss:
+        </p>
+      
+        <div class="equation">$$
+        L_{n,r}^{k,B}(\omega_{n,r}^{k}) = \frac{1}{|B_n^k|} \sum_{(w, y) \in B_n^k} \ell(y, \hat{f}_{n,r}^{k}(w, \omega_{n,r}^{k}))
+        $$</div>
+      
+        <p>
+          Gradients use parameter shift:
+        </p>
+      
+        <div class="equation">$$
+        \frac{\partial f(w, \omega_{n,r}^{k})}{\partial \omega_{n,r,d}^{k}} = \frac{1}{2} \left[f(w, \omega_{n,r}^{k} + \frac{\pi}{2} e_d) - f(w, \omega_{n,r}^{k} - \frac{\pi}{2} e_d)\right]
+        $$</div>
+      
+        <p>
+          Update rule:
+        </p>
+      
+        <div class="equation">$$
+        \omega_{n,r}^{k+1} = \omega_{n,r}^{k} - \eta \nabla_{\omega} L_{n,r}^{k,B}(\omega_{n,r}^{k})
+        $$</div>
+      
+        <p>
+          Final local update after \( K \) epochs: \( \omega_{n}^{(r)} = \omega_{n,r}^{K} \).
+        </p>
+      
+        <p><strong>Federated Aggregation:</strong><br>
+          Server broadcasts \( \boldsymbol{\omega}_{\text{global}}^{(r)} \), clients initialize \( \omega_{n,r}^{0} \) accordingly. After training, clients send \( \omega_n^{(r)} \), and server aggregates:
+        </p>
+      
+        <div class="equation">$$
+        \boldsymbol{\omega}_{\text{global}}^{(r+1)} = \frac{1}{D} \sum_{n=1}^{N} |D_n| \boldsymbol{\omega}_n^{(r)}
+        $$</div>
+      
+        <p>
+          where \( D = \sum_{n=1}^{N} |D_n| \). This continues until convergence or round \( R \).
+        </p>
+      </section>
+      
+
+    <!-- Algorithm Section -->
+    <section id="algorithm">
+        <h2>Quantum Federated Learning (QFL) Framework Algorithm</h2>
+        <div class="algorithm-box">
+          <p><strong>Input:</strong> Global rounds \( R \), local epochs \( K \), clients \( \mathcal{N} = \{1, \dots, N\} \), learning rate \( \eta \), number of shots \( M \)</p>
+          <p><strong>Initialization:</strong> Initialize global model parameters \( \boldsymbol{\omega}_{\text{global}}^{(0)} \)</p>
+      
+          <div class="algo-block">
+            <span class="algo-step">[1]</span> For each global round \( r = 1, \dots, R \):
+          </div>
+          <div class="algo-indent">
+            <div class="algo-line">Server broadcasts \( \boldsymbol{\omega}_{\text{global}}^{(r)} \) to all clients</div>
+            <div class="algo-line">Each client \( n \in \mathcal{N} \) does:</div>
+            <div class="algo-indent">
+              <div class="algo-line">Initialize local parameters \( \omega_{n,r}^{0} = \boldsymbol{\omega}_{\text{global}}^{(r)} \)</div>
+              <div class="algo-line">For each local epoch \( k = 0, \dots, K{-}1 \):</div>
+              <div class="algo-indent">
+                <div class="algo-line">Sample mini-batch \( B_n^k \subseteq D_n \)</div>
+                <div class="algo-line">For each data point \( (w, y) \in B_n^k \):</div>
+                <div class="algo-indent">
+                  <div class="algo-line">Encode input using amplitude encoding (Eq. 1)</div>
+                  <div class="algo-line">Apply PQC to get output state (Eq. 3)</div>
+                  <div class="algo-line">Compute measurement expectation (Eq. 4)</div>
+                  <div class="algo-line">Evaluate sample loss \( \ell(y, \hat{f}) \)</div>
+                </div>
+                <div class="algo-line">Compute gradients using parameter shift rule (Eq. 5)</div>
+                <div class="algo-line">Update model using gradient descent (Eq. 6)</div>
+              </div>
+              <div class="algo-line">Send updated parameters \( \omega_n^{(r)} \) to server</div>
+            </div>
+            <div class="algo-line">Server aggregates updates using weighted average (Eq. 7)</div>
+          </div>
+      
+          <p><strong>Output:</strong> Final global model \( \boldsymbol{\omega}^* = \boldsymbol{\omega}_{\text{global}}^{(R)} \)</p>
+        </div>
+      </section>
+      
+      
+  </main>
+  
+  <footer>
+    <p>© 2025 Quantum Federated Learning Simulator. All rights reserved.</p>
+  </footer>
+</body>
+</html>
